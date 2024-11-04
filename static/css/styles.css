@@ -174,3 +174,50 @@ table tr:nth-child(even) {
 .delete-button:hover {
     background-color: #d32f2f;
 }
+
+/* Existing styles remain unchanged */
+
+/* Add the following styles at the end of the file */
+
+/* Ensure table cells handle long words or URLs gracefully */
+table td, table th {
+    word-wrap: break-word;
+    word-break: break-all;
+    hyphens: auto;
+    max-width: 150px; /* Adjust as needed */
+    vertical-align: top;
+}
+
+/* Tooltip styling */
+table td a[title] {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+}
+
+table td a[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background-color: #333;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+    z-index: 1;
+}
+/* Add styles for the copy button */
+.copy-button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.copy-button:hover {
+    background-color: #45a049;
+}
