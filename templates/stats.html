@@ -1,0 +1,31 @@
+{% extends "layout.html" %} {% block content %}
+<h1>Statistics</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Original URL</th>
+      <th>Short URL</th>
+      <th>Clicks</th>
+      <th>Date Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for url in urls %}
+    <tr>
+      <td>
+        <a href="{{ url.original_url }}" target="_blank"
+          >{{ url.original_url }}</a
+        >
+      </td>
+      <td>
+        <a href="{{ request.host_url }}{{ url.short_id }}" target="_blank"
+          >{{ request.host_url }}{{ url.short_id }}</a
+        >
+      </td>
+      <td>{{ url.clicks }}</td>
+      <td>{{ url.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
