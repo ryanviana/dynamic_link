@@ -7,6 +7,8 @@
       <th>Short URL</th>
       <th>Clicks</th>
       <th>Date Created</th>
+      <th>Video Origin</th>
+      <!-- New column -->
     </tr>
   </thead>
   <tbody>
@@ -24,6 +26,8 @@
       </td>
       <td>{{ url.clicks }}</td>
       <td>{{ url.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+      <td>{{ url.video_origin }}</td>
+      <!-- New data -->
     </tr>
     {% endfor %}
   </tbody>
