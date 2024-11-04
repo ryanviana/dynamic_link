@@ -11,14 +11,12 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv(
-    "SECRET_KEY", "your_default_secret_key"
-)  # Replace with your own secret key
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "your_default_secret_key")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///url_shortener.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)  # Initialize Flask-Migrate
+migrate = Migrate(app, db)
 
 
 class URLMap(db.Model):
@@ -27,7 +25,7 @@ class URLMap(db.Model):
     short_id = db.Column(db.String(10), unique=True, nullable=False)
     clicks = db.Column(db.Integer, default=0)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    video_origin = db.Column(db.String(256), nullable=True)  # New column
+    video_origin = db.Column(db.String(256), nullable=True)
 
 
 def generate_short_id(num_chars=6):
@@ -45,7 +43,7 @@ def index():
     if request.method == "POST":
         original_url = request.form.get("original_url")
         custom_code = request.form.get("custom_code")
-        video_origin = request.form.get("video_origin")  # Get the video origin
+        video_origin = request.form.get("video_origin")
 
         # Validate the original URL
         if not original_url or not validators.url(original_url):
@@ -65,14 +63,12 @@ def index():
 
         # Create a new URL mapping
         new_url = URLMap(
-            original_url=original_url,
-            short_id=short_id,
-            video_origin=video_origin,  # Save the video origin
+            original_url=original_url, short_id=short_id, video_origin=video_origin
         )
         db.session.add(new_url)
         db.session.commit()
 
-        short_url = request.host_url + short_id
+        short_url = url_for("redirect_to_url", short_id=short_id, _external=True)
         return render_template("index.html", short_url=short_url)
 
     return render_template("index.html")
@@ -90,13 +86,58 @@ def redirect_to_url(short_id):
         return redirect(url_for("index"))
 
 
-@app.route("/stats")
+@app.route("/stats", methods=["GET"])
 def stats():
-    urls = URLMap.query.order_by(URLMap.date_created.desc()).all()
-    return render_template("stats.html", urls=urls)
+    # Get sorting parameters
+    sort = request.args.get("sort", "date_created")
+    order = request.args.get("order", "desc")
+    search = request.args.get("search", "")
+
+    # Map sort parameter to model attribute
+    sort_options = {
+        "original_url": URLMap.original_url,
+        "short_id": URLMap.short_id,
+        "clicks": URLMap.clicks,
+        "date_created": URLMap.date_created,
+        "video_origin": URLMap.video_origin,
+    }
+    sort_attr = sort_options.get(sort, URLMap.date_created)
+
+    # Apply ordering
+    if order == "desc":
+        sort_attr = sort_attr.desc()
+        order_toggle = "asc"
+    else:
+        sort_attr = sort_attr.asc()
+        order_toggle = "desc"
+
+    # Apply search filter
+    query = URLMap.query
+    if search:
+        query = query.filter(
+            URLMap.original_url.ilike(f"%{search}%")
+            | URLMap.video_origin.ilike(f"%{search}%")
+        )
+
+    # Pagination
+    page = request.args.get("page", 1, type=int)
+    urls = query.order_by(sort_attr).paginate(page=page, per_page=10)
+
+    return render_template(
+        "stats.html", urls=urls, sort=sort, order=order_toggle, search=search
+    )
 
 
-# Add this block to fix URL generation behind a proxy (like Nginx)
+@app.route("/delete/<int:url_id>", methods=["POST"])
+def delete_url(url_id):
+    url_data = URLMap.query.get_or_404(url_id)
+    db.session.delete(url_data)
+    db.session.commit()
+    flash("URL has been deleted successfully.", "success")
+    return redirect(url_for("stats"))
+
+
+# Fix URL generation behind a proxy (like Nginx)
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
