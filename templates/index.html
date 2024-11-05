@@ -18,8 +18,9 @@
 <div class="result">
   <p>Your shortened URL:</p>
   <a href="{{ short_url }}">{{ short_url }}</a>
+  <button class="copy-button" data-url="{{ short_url }}">Copy</button>
 </div>
-{% if short_url %}
+{% endif %} {% if short_url %}
 <div class="result">
   <p>Your shortened URL:</p>
   <a href="{{ short_url }}">{{ short_url }}</a>

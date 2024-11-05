@@ -74,7 +74,7 @@ def index():
         db.session.add(new_url)
         db.session.commit()
 
-        # Generate the full short URL using url_for
+        # Correctly generate the full short URL
         short_url = url_for("redirect_to_url", short_id=short_id, _external=True)
         return render_template("index.html", short_url=short_url)
 
@@ -148,6 +148,7 @@ def delete_url(url_id):
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
 
 if __name__ == "__main__":
     with app.app_context():
