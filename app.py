@@ -7,8 +7,7 @@ import validators
 from datetime import datetime
 from dotenv import load_dotenv
 import os
-
-from werkzeug.middleware.proxy_fix import ProxyFix  # Ensure this import is present
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 load_dotenv()
 
@@ -17,12 +16,10 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "your_default_secret_key")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///url_shortener.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
-app.wsgi_app = ProxyFix(
-    app.wsgi_app, x_proto=1, x_host=1
-)  # Correctly configure ProxyFix
 
 
 class URLMap(db.Model):
@@ -35,7 +32,6 @@ class URLMap(db.Model):
 
 
 def generate_short_id(num_chars=6):
-    """Generate a random string of letters and digits."""
     while True:
         short_id = "".join(
             random.choices(string.ascii_letters + string.digits, k=num_chars)
@@ -74,9 +70,7 @@ def index():
         db.session.add(new_url)
         db.session.commit()
 
-        # Correctly generate the full short URL
-        # short_url = url_for("redirect_to_url", short_id=short_id, _external=True)
-        # Option 2: Concatenating strings
+        # Use short_id directly
         short_url = short_id
         return render_template("index.html", short_url=short_url)
 
@@ -144,12 +138,6 @@ def delete_url(url_id):
     db.session.commit()
     flash("URL has been deleted successfully.", "success")
     return redirect(url_for("stats"))
-
-
-# Fix URL generation behind a proxy (like Nginx)
-from werkzeug.middleware.proxy_fix import ProxyFix
-
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 
 if __name__ == "__main__":

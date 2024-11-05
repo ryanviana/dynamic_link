@@ -7,10 +7,7 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/styles.css') }}"
     />
-    <link rel="icon" href="data:," />
-    <!-- Prevent favicon error -->
   </head>
-
   <body>
     <nav>
       <a href="{{ url_for('index') }}">Home</a>
@@ -22,7 +19,6 @@
       <div class="alert {{ category }}">{{ message }}</div>
       {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
     </div>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
   </body>
 </html>

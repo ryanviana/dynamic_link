@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
       navigator.clipboard
         .writeText(url)
         .then(() => {
-          alert("Shortened URL copied to clipboard.");
+          alert("URL copied to clipboard.");
         })
         .catch((err) => {
           console.error("Could not copy text: ", err);
