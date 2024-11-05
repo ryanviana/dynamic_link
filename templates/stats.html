@@ -85,7 +85,7 @@
         </a>
         <button
           class="copy-button"
-          data-url="{{ url_for('redirect_to_url', short_id=url.short_id, _external=True) }}"
+          data-url="{{ short_url = request.host_url + short_id }}"
         >
           Copy
         </button>
