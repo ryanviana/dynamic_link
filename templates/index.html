@@ -8,7 +8,7 @@
   <label for="custom_code">Custom Code (Optional):</label>
   <input type="text" name="custom_code" id="custom_code" />
 
-  <!-- New Video Origin field -->
+  <!-- Video Origin field -->
   <label for="video_origin">Video Origin (Optional):</label>
   <input type="text" name="video_origin" id="video_origin" />
 
@@ -18,7 +18,11 @@
 {% if short_url %}
 <div class="result">
   <p>Your shortened URL:</p>
-  <a href="{{ short_url }}">{{ short_url }}</a>
-  <button class="copy-button" data-url="{{ short_url }}">Copy</button>
+  <a href="{{ request.host_url }}{{ short_url }}"
+    >{{ request.host_url }}{{ short_url }}</a
+  >
+  <button class="copy-button" data-url="{{ request.host_url }}{{ short_url }}">
+    Copy
+  </button>
 </div>
 {% endif %} {% endblock %}
