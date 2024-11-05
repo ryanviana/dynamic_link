@@ -56,12 +56,7 @@
         </a>
       </td>
       <td>
-        <a
-          href="{{ url_for('redirect_to_url', short_id=url.short_id, _external=True) }}"
-          target="_blank"
-        >
-          {{ url.short_id }}
-        </a>
+        <a href="{{ short.id }}" target="_blank"> {{ url.short_id }} </a>
       </td>
       <td>{{ url.clicks }}</td>
       <td>{{ url.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
@@ -77,18 +72,8 @@
         </form>
       </td>
       <td>
-        <a
-          href="{{ url_for('redirect_to_url', short_id=url.short_id, _external=True) }}"
-          target="_blank"
-        >
-          {{ url.short_id }}
-        </a>
-        <button
-          class="copy-button"
-          data-url="{{ url_for('redirect_to_url', short_id=url.short_id, _external=True) }}"
-        >
-          Copy
-        </button>
+        <a href="{{ short.id }}" target="_blank"> {{ url.short_id }} </a>
+        <button class="copy-button" data-url="{{ short.id }}">Copy</button>
       </td>
     </tr>
     {% endfor %}
