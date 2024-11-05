@@ -77,7 +77,7 @@ def index():
         # Correctly generate the full short URL
         # short_url = url_for("redirect_to_url", short_id=short_id, _external=True)
         # Option 2: Concatenating strings
-        short_url = request.host_url + short_id
+        short_url = short_id
         return render_template("index.html", short_url=short_url)
 
     return render_template("index.html")
