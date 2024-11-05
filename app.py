@@ -8,6 +8,8 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
+from werkzeug.middleware.proxy_fix import ProxyFix  # Ensure this import is present
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -17,6 +19,10 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_proto=1, x_host=1
+)  # Correctly configure ProxyFix
 
 
 class URLMap(db.Model):
@@ -68,6 +74,7 @@ def index():
         db.session.add(new_url)
         db.session.commit()
 
+        # Generate the full short URL using url_for
         short_url = url_for("redirect_to_url", short_id=short_id, _external=True)
         return render_template("index.html", short_url=short_url)
 

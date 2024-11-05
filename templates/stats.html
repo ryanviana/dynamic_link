@@ -78,13 +78,16 @@
       </td>
       <td>
         <a
-          href="{{ url.original_url }}"
+          href="{{ url_for('redirect_to_url', short_id=url.short_id, _external=True) }}"
           target="_blank"
-          title="{{ url.original_url }}"
+          title="{{ url_for('redirect_to_url', short_id=url.short_id, _external=True) }}"
         >
-          {{ url.original_url | truncate(50) }}
+          {{ url.short_id }}
         </a>
-        <button class="copy-button" data-url="{{ url.original_url }}">
+        <button
+          class="copy-button"
+          data-url="{{ url_for('redirect_to_url', short_id=url.short_id, _external=True) }}"
+        >
           Copy
         </button>
       </td>
