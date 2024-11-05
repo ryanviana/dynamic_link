@@ -18,9 +18,7 @@
 {% if short_url %}
 <div class="result">
   <p>Your shortened URL:</p>
-  <a href="{{ request.host_url }}{{ short_url }}"
-    >{{ request.host_url }}{{ short_url }}</a
-  >
+  <a href="{{ request.host_url }}{{ short_url }}">{{ short_url }}</a>
   <button class="copy-button" data-url="{{ request.host_url }}{{ short_url }}">
     Copy
   </button>

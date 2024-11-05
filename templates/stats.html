@@ -73,12 +73,7 @@
           <button type="submit" class="delete-button">Delete</button>
         </form>
         <!-- Copy Button -->
-        <button
-          class="copy-button"
-          data-url="{{ request.host_url }}{{ url.short_id }}"
-        >
-          Copy
-        </button>
+        <button class="copy-button" {{ url.short_id }}>Copy</button>
       </td>
     </tr>
     {% endfor %}
